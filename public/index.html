@@ -1,1 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Risers: the fastest-growing Roblox games</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600;700;800&family=Unbounded:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ground:#E6F0EC; --ink:#10302D; --sun:#FFC93C; --coral:#FF5B3A; --sea:#1C8C84;
+  --mute:#4D6862; --line:#C3D5CE; --white:#FBFEFC; --up:#0F7A55; --dn:#B3261E;
+  --disp:'Unbounded','Arial Black',system-ui,sans-serif;
+  --body:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font:400 16px/1.5 var(--body)}
+.wrap{max-width:1040px;margin:0 auto;padding:0 clamp(16px,4vw,32px)}
+a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--coral);outline-offset:3px}
+
+.hero{background:var(--sun);padding:clamp(28px,5vw,56px) 0 8px}
+h1{font:800 clamp(30px,5.6vw,60px)/1.04 var(--disp);letter-spacing:-.03em;margin:0;max-width:16ch}
+.lede{font-size:18px;max-width:54ch;margin:16px 0 0}
+.top{display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;list-style:none;margin:32px 0 0;padding:4px 0 28px}
+.tile{flex:0 0 clamp(150px,19%,196px);scroll-snap-align:start}
+.tile a{display:block;color:inherit;text-decoration:none}
+.tile .ico{position:relative;display:block;aspect-ratio:1;border-radius:26px;background:var(--ink);overflow:hidden}
+.ico img{width:100%;height:100%;object-fit:cover;display:block}
+.rk{position:absolute;left:10px;top:10px;background:var(--ink);color:var(--sun);font:800 14px/1 var(--disp);padding:6px 11px;border-radius:999px}
+.tn{display:block;margin-top:12px;font-weight:800;font-size:17px;line-height:1.2;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.tm{display:block;font-size:14px;margin-top:2px}
+.hb{display:block;height:8px;border-radius:4px;background:rgba(16,48,45,.2);margin-top:10px;overflow:hidden}
+.hb i{display:block;height:100%;background:var(--ink);border-radius:4px;transition:width 1.1s cubic-bezier(.16,.84,.24,1)}
+.tile a:hover .tn{text-decoration:underline}
+
+.ctl{display:flex;flex-wrap:wrap;gap:12px 16px;align-items:center;margin:28px 0 12px}
+.tabs{display:flex;border:2px solid var(--ink);border-radius:999px;overflow:hidden}
+.tabs button{padding:9px 20px;border:0;background:transparent;color:var(--ink);font:700 15px var(--body);cursor:pointer}
+.tabs button[aria-selected=true]{background:var(--ink);color:var(--sun)}
+label{display:flex;align-items:center;gap:8px;font-size:15px;color:var(--mute)}
+select,input[type=search]{padding:9px 14px;border:2px solid var(--ink);border-radius:999px;background:var(--white);color:var(--ink);font:600 15px var(--body)}
+select:disabled{opacity:.45}
+input[type=search]{flex:1 1 220px;min-width:0}
+.status{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:14px;color:var(--mute)}
+.dot{width:10px;height:10px;border-radius:50%;background:#9AAFA8}
+.dot.ok{background:var(--up)} .dot.bad{background:var(--dn)}
+#notice{padding:12px 16px;border-left:4px solid var(--dn);background:var(--white);margin:12px 0}
+.hint{color:var(--mute);font-size:14px;margin:0 0 4px}
+
+.list{list-style:none;margin:0;padding:0}
+.g{display:grid;grid-template-columns:36px 52px minmax(0,1fr) minmax(110px,200px) 72px 112px;align-items:center;gap:0 16px;padding:12px 0;border-bottom:1px solid var(--line)}
+.rank{font:800 15px var(--disp);color:var(--mute)}
+.g .ico{width:52px;height:52px;border-radius:13px;background:var(--line);overflow:hidden}
+.nm{min-width:0}
+.nm a{display:block;font-weight:700;color:inherit;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nm a:hover{text-decoration:underline}
+.by{font-size:14px;color:var(--mute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.who{background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer}
+.who:hover{text-decoration:underline}
+.heat{height:10px;border-radius:5px;background:var(--line);overflow:hidden}
+.heat i{display:block;height:100%;border-radius:5px}
+.spark svg{display:block;width:64px;height:22px}
+.spark polyline{fill:none;stroke:var(--ink);stroke-width:2;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.pl{text-align:right}
+.pl b{font-weight:800;font-size:20px;font-variant-numeric:tabular-nums}
+.pl small{display:block;font-size:13px;font-weight:700}
+.up{color:var(--up)} .dn{color:var(--dn)}
+#empty{color:var(--mute);margin:20px 0}
+
+.chk{margin:4px 0 8px}
+details.st{border-bottom:1px solid var(--line)}
+summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:0 16px;padding:16px 0}
+summary::-webkit-details-marker{display:none}
+.sn{font-weight:800;font-size:18px}
+.sn::after{content:" +";color:var(--mute)}
+details[open] .sn::after{content:" −"}
+.sm{grid-column:1;color:var(--mute);font-size:14px}
+summary b{grid-column:2;grid-row:1/3;align-self:center;font:800 24px var(--body)}
+.sb{padding:0 0 16px}
+.sl{list-style:none;margin:0;padding:0}
+.sl li{display:grid;grid-template-columns:minmax(0,1fr) 80px 70px;gap:12px;padding:8px 0;border-top:1px dashed var(--line)}
+.sl a{color:inherit;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sl span{color:var(--mute);font-size:14px}
+.sl b{text-align:right}
+.ext{font-size:14px;color:var(--ink)}
+.sc{background:none;border:0;padding:0 0 0 6px;font:600 14px var(--body);color:var(--sea);text-decoration:underline;cursor:pointer}
+dialog{border:0;border-radius:24px;background:var(--white);color:var(--ink);padding:28px;width:min(560px,92vw);max-height:88vh;overflow:auto}
+dialog::backdrop{background:rgba(16,48,45,.55)}
+dialog h3{font:800 24px/1.15 var(--disp);letter-spacing:-.02em;margin:0 0 4px;padding-right:72px}
+.x{position:absolute;right:20px;top:20px;border:2px solid var(--ink);border-radius:999px;background:transparent;padding:6px 14px;font:700 14px var(--body);color:var(--ink);cursor:pointer}
+.kv{display:grid;grid-template-columns:1fr auto;gap:6px 16px;margin:14px 0}
+.kv span{color:var(--mute)} .kv b{text-align:right}
+.offer{background:var(--sun);border-radius:16px;padding:14px 16px;margin:16px 0}
+.offer .kv span{color:var(--ink)}
+footer{padding:36px 0 64px;font-size:14px;color:var(--mute);max-width:70ch}
+
+@media (max-width:760px){
+  .g{grid-template-columns:28px 48px minmax(0,1fr) auto;gap:0 12px}
+  .g .ico{width:48px;height:48px}
+  .heat{grid-column:3/-1;grid-row:2;margin-top:8px}
+  .spark{display:none}
+  .status{margin-left:0;width:100%}
+}
+@media (prefers-reduced-motion:reduce){.hb i{transition:none}}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <h1>What's blowing up on Roblox</h1>
+    <p class="lede">Games ranked by how many players they have for how new they are, plus the studios running several games at once.</p>
+    <ol class="top" id="top" aria-label="Top five risers"></ol>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="ctl">
+    <div class="tabs" role="tablist">
+      <button role="tab" aria-selected="true" data-v="games">Games</button>
+      <button role="tab" aria-selected="false" data-v="studios">Studios</button>
+    </div>
+    <label>Released within
+      <select id="win">
+        <option value="1">24 hours</option><option value="3">3 days</option><option value="7">7 days</option>
+        <option value="30" selected>30 days</option><option value="90">90 days</option><option value="0">Any time</option>
+      </select>
+    </label>
+    <label>Sort by
+      <select id="sort">
+        <option value="mom">Momentum</option><option value="ccu">Players now</option>
+        <option value="gro">Growth %</option><option value="vpd">Visits per day</option><option value="delta">Players gained</option>
+      </select>
+    </label>
+    <label>Players
+      <select id="min" aria-label="Minimum players"><option value="0">Any</option><option value="10" selected>10+</option><option value="25">25+</option><option value="50">50+</option><option value="100">100+</option></select>
+      <select id="max" aria-label="Maximum players"><option value="0">no cap</option><option value="100">up to 100</option><option value="500">up to 500</option><option value="2000">up to 2K</option><option value="10000">up to 10K</option></select>
+    </label>
+    <input id="q" type="search" placeholder="Filter by name or studio, then press Enter to search" aria-label="Filter by name or studio">
+    <span class="status"><span class="dot" id="dot"></span><span id="st">Loading</span></span>
+  </div>
+  <div id="notice" role="status" hidden></div>
+
+  <section id="gamesView">
+    <p class="hint">Press Enter after typing a keyword to dig up more games. Click a studio name to see only its games. Open a scout report for pass prices, likes and rough value.</p>
+    <ol class="list" id="gl"></ol>
+  </section>
+  <section id="studiosView" hidden>
+    <label class="chk"><input type="checkbox" id="multi" checked> Only studios with 2 or more games in this view</label>
+    <div id="sl"></div>
+  </section>
+  <p id="empty">Loading Roblox's discovery lists…</p>
+
+  <footer>
+    Momentum is players now divided by the square root of the game's age in days plus one, so a 2-day-old game with 5K players outranks a 2-year-old game with 20K. Roblox's discovery lists are undocumented and can change, and this page reads them through roproxy.com. Growth percentages and trend lines come from player-count snapshots kept for 24 hours: saved on the server every 10 minutes when the site is deployed with its functions, or saved by this browser while the page is open otherwise. Growth compares today's players with up to 6 hours earlier.
+  </footer>
+</main>
+
+<dialog id="rep"><button class="x" id="repClose">Close</button><div id="repBody"></div></dialog>
+
+<script>
+const CONFIG = {
+  proxyDomain: 'roproxy.com',   // Roblox blocks direct browser calls (CORS), so requests go through a proxy
+  cycleMs: 120000,              // how often player counts refresh
+  discoverMs: 300000,           // how often Roblox's discovery lists are re-read
+  maxPool: 600,                 // most games tracked at once
+  pages: 3,                     // pages read from each discovery list
+  searchTerms: ['simulator', 'tycoon', 'obby', 'horror', 'anime', 'tower defense', 'rng', 'modded', 'racing', 'survival', 'roleplay', 'fighting'], // keywords used to dig up smaller games
+  // Rough revenue rule of thumb (Robux per player per day), DevEx rate, and placeholder offer multiples
+  robuxPerCcuPerDay: { low: 50, high: 100 },
+  usdPerRobux: 0.0038,
+  offerMonths: { open: 3, max: 8 }
+};
+// Swap for your own proxy if needed, e.g. (sub, path) => `https://your-worker.workers.dev/${sub}${path}`
+const api = (sub, path) => `https://${sub}.${CONFIG.proxyDomain}${path}`;
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const cf = new Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 });
+const ageLabel = d => d < 1 ? `${Math.max(1, Math.round(d * 24))}h old` : d < 60 ? `${Math.floor(d)}d old` : d < 730 ? `${Math.floor(d / 30)}mo old` : `${Math.floor(d / 365)}y old`;
+const heatCol = t => `hsl(${175 - 165 * t} 75% ${50 - 8 * t}%)`;   // teal to coral
+
+const LS = 'risers-v1';
+let store = { ids: [], snaps: {} };
+try { Object.assign(store, JSON.parse(localStorage.getItem(LS) || '{}')); } catch {}
+const pool = new Set(store.ids), all = new Map(), icons = {}, openSt = new Set(), loadedSt = new Set();
+const SESSION = (crypto.randomUUID ? crypto.randomUUID() : Date.now() + '-' + Math.random());
+let lastDisc = 0, first = true, timer;
+
+async function getJSON(url) {
+  const ctl = new AbortController();
+  const t = setTimeout(() => ctl.abort(), 15000);
+  try {
+    const r = await fetch(url, { signal: ctl.signal });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return await r.json();
+  } finally { clearTimeout(t); }
+}
+
+/* Data */
+const collectIds = o => {
+  const f = new Set();
+  (function w(x) { if (x && typeof x === 'object') { if (x.universeId) f.add(Number(x.universeId)); Object.values(x).forEach(w); } })(o);
+  return f;
+};
+const search = t => getJSON(api('apis', `/search-api/omni-search?searchQuery=${encodeURIComponent(t)}&sessionId=${SESSION}`));
+async function discover() {
+  const q = `sessionId=${SESSION}&device=computer&country=all`;
+  const s = await getJSON(api('apis', `/explore-api/v1/get-sorts?${q}`));
+  const sorts = (s.sorts || []).filter(x => !x.contentType || /game/i.test(x.contentType)).slice(0, 14);
+  const found = new Set(), add = o => collectIds(o).forEach(u => found.add(u));
+  await Promise.all(sorts.map(async so => {
+    let tok = '';
+    for (let p = 0; p < CONFIG.pages; p++) {
+      try {
+        const c = await getJSON(api('apis', `/explore-api/v1/get-sort-content?${q}&sortId=${encodeURIComponent(so.sortId ?? so.id)}${tok}`));
+        add(c);
+        if (!c.nextPageToken) break;
+        tok = '&pageToken=' + encodeURIComponent(c.nextPageToken);
+      } catch { break; }
+    }
+  }));
+  await Promise.all(CONFIG.searchTerms.map(t => search(t).then(add).catch(() => {})));
+  return [...found];
+}
+async function hydrate(ids) {
+  const out = [];
+  for (let i = 0; i < ids.length; i += 50) {
+    const d = await getJSON(api('games', `/v1/games?universeIds=${ids.slice(i, i + 50).join(',')}`));
+    out.push(...d.data);
+  }
+  return out;
+}
+async function loadIcons(ids) {
+  const need = ids.filter(id => !icons[id]);
+  for (let i = 0; i < need.length; i += 100) {
+    try {
+      const t = await getJSON(api('thumbnails', `/v1/games/icons?universeIds=${need.slice(i, i + 100).join(',')}&returnPolicy=PlaceHolder&size=256x256&format=Png&isCircular=false`));
+      t.data.forEach(x => { if (x.imageUrl) icons[x.targetId] = x.imageUrl; });
+    } catch {}
+  }
+}
+function snap(list) {
+  const t = Date.now();
+  list.forEach(g => {
+    const a = store.snaps[g.id] || (store.snaps[g.id] = []);
+    if (!a.length || t - a[a.length - 1][0] > 540000) a.push([t, g.playing]);
+    if (a.length > 144) a.shift();
+  });
+  Object.keys(store.snaps).forEach(k => { if (!pool.has(+k)) delete store.snaps[k]; });
+  store.ids = [...pool];
+  try { localStorage.setItem(LS, JSON.stringify(store)); } catch {}
+}
+
+/* Metrics */
+function metrics(g) {
+  const age = (Date.now() - Date.parse(g.created)) / 864e5;
+  const pts = store.snaps[g.id] || [];
+  let delta = null, pct = null;
+  if (pts.length > 1) {
+    const cut = Date.now() - 216e5;
+    let i = pts.findIndex(p => p[0] >= cut);
+    if (i < 0 || i === pts.length - 1) i = pts.length - 2;
+    delta = g.playing - pts[i][1];
+    pct = delta / Math.max(pts[i][1], 10) * 100;
+  }
+  return { g, age, mom: g.playing / Math.sqrt(age + 1), vpd: g.visits / Math.max(age, .25), delta, pct };
+}
+function rows() {
+  const win = +$('win').value, q = $('q').value.trim().toLowerCase(), s = $('sort').value;
+  const lo = +$('min').value, hi = +$('max').value;
+  let r = [...pool].map(id => all.get(id)).filter(Boolean).map(metrics).filter(x => x.g.playing >= lo && (!hi || x.g.playing <= hi));
+  if (win) r = r.filter(x => x.age <= win);
+  if (q) r = r.filter(x => (x.g.name + ' ' + (x.g.creator?.name || '')).toLowerCase().includes(q));
+  const key = { mom: x => x.mom, ccu: x => x.g.playing, vpd: x => x.vpd, gro: x => x.pct ?? -1e9, delta: x => x.delta ?? -1e9 }[s];
+  return r.sort((a, b) => key(b) - key(a));
+}
+function studios(r) {
+  const map = new Map();
+  r.forEach(x => {
+    const c = x.g.creator || {}, k = c.type + ':' + c.id;
+    let s = map.get(k);
+    if (!s) map.set(k, s = { k, id: c.id, type: c.type, name: c.name, n: 0, ccu: 0, newest: 1e9 });
+    s.n++; s.ccu += x.g.playing; s.newest = Math.min(s.newest, x.age);
+  });
+  let l = [...map.values()];
+  if ($('multi').checked) l = l.filter(s => s.n >= 2);
+  return l.sort((a, b) => b.ccu - a.ccu);
+}
+
+/* Rendering */
+const img = id => icons[id] ? `<img src="${esc(icons[id])}" alt="" loading="lazy">` : '';
+const gameUrl = g => `https://www.roblox.com/games/${g.rootPlaceId}`;
+function spark(id) {
+  const a = store.snaps[id];
+  if (!a || a.length < 2) return '';
+  const v = a.map(p => p[1]), lo = Math.min(...v), s = (Math.max(...v) - lo) || 1;
+  return `<svg viewBox="0 0 64 22" preserveAspectRatio="none" aria-hidden="true"><polyline points="${v.map((y, i) => `${(i / (v.length - 1) * 64).toFixed(1)},${(20 - (y - lo) / s * 18).toFixed(1)}`).join(' ')}"/></svg>`;
+}
+function tileHTML(x, i, max) {
+  const g = x.g, w = Math.max(6, Math.sqrt(x.mom / max) * 100);
+  return `<li class="tile"><a href="${gameUrl(g)}" target="_blank" rel="noopener"><span class="ico">${img(g.id)}<b class="rk">${i + 1}</b></span><span class="tn">${esc(g.name)}</span><span class="tm">${ageLabel(x.age)}, ${cf.format(g.playing)} playing</span><span class="hb"><i data-w="${w}" style="width:${first ? 0 : w}%"></i></span></a></li>`;
+}
+function rowHTML(x, i, max) {
+  const g = x.g, t = Math.sqrt(x.mom / max);
+  const d = x.delta == null ? '' : `<small class="${x.delta >= 0 ? 'up' : 'dn'}">${x.delta >= 0 ? '+' : '−'}${cf.format(Math.abs(x.delta))} (${x.pct >= 0 ? '+' : '−'}${cf.format(Math.round(Math.abs(x.pct)))}%)</small>`;
+  return `<li class="g"><b class="rank">${i + 1}</b><span class="ico">${img(g.id)}</span><div class="nm"><a href="${gameUrl(g)}" target="_blank" rel="noopener">${esc(g.name)}</a><div class="by"><button class="who" data-q="${esc(g.creator?.name)}">${esc(g.creator?.name)}</button>, ${ageLabel(x.age)} <button class="sc" data-id="${g.id}">Scout report</button></div></div><div class="heat" title="Momentum ${cf.format(x.mom)}"><i style="width:${Math.max(4, t * 100)}%;background:${heatCol(t)}"></i></div><div class="spark">${spark(g.id)}</div><div class="pl"><b>${cf.format(g.playing)}</b>${d}</div></li>`;
+}
+function studioGames(s) {
+  const l = [...all.values()].filter(g => g.creator && String(g.creator.id) === String(s.id) && g.creator.type === s.type).sort((a, b) => b.playing - a.playing);
+  return `<ul class="sl">${l.map(g => `<li><a href="${gameUrl(g)}" target="_blank" rel="noopener">${esc(g.name)}</a><span>${ageLabel((Date.now() - Date.parse(g.created)) / 864e5)}</span><b>${cf.format(g.playing)}</b></li>`).join('')}</ul>` + (loadedSt.has(s.k) ? '' : '<p class="hint">Loading the rest of their games…</p>');
+}
+function studioHTML(s) {
+  const link = s.type === 'Group' ? `https://www.roblox.com/communities/${s.id}` : `https://www.roblox.com/users/${s.id}/profile`;
+  return `<details class="st" data-k="${esc(s.k)}"${openSt.has(s.k) ? ' open' : ''}><summary><span class="sn">${esc(s.name)}</span><span class="sm">${s.n} games in this view, newest ${ageLabel(s.newest)}</span><b>${cf.format(s.ccu)}</b></summary><div class="sb"><div class="gl">${studioGames(s)}</div><a class="ext" href="${link}" target="_blank" rel="noopener">Open ${s.type === 'Group' ? 'group' : 'profile'} on Roblox</a></div></details>`;
+}
+function render() {
+  const r = rows(), max = Math.max(1, ...r.map(x => x.mom));
+  $('top').innerHTML = r.slice(0, 5).map((x, i) => tileHTML(x, i, max)).join('');
+  $('gl').innerHTML = r.slice(0, 100).map((x, i) => rowHTML(x, i, max)).join('');
+  $('sl').innerHTML = studios(r).map(studioHTML).join('');
+  $('empty').hidden = r.length > 0;
+  $('empty').textContent = all.size ? 'No games match these filters. Try a longer release window.' : 'Loading Roblox\'s discovery lists…';
+  if (first && r.length) {
+    first = false;
+    requestAnimationFrame(() => requestAnimationFrame(() => document.querySelectorAll('.hb i').forEach(i => i.style.width = i.dataset.w + '%')));
+  }
+}
+async function loadStudio(k) {
+  const [type, id] = k.split(':');
+  loadedSt.add(k);
+  try {
+    const p = type === 'Group' ? `/v2/groups/${id}/games?accessFilter=2&limit=100&sortOrder=Desc` : `/v2/users/${id}/games?accessFilter=2&limit=50&sortOrder=Desc`;
+    const g = await getJSON(api('games', p));
+    (await hydrate(g.data.map(x => x.id))).forEach(x => all.set(x.id, x));
+  } catch {}
+  const box = document.querySelector(`details[data-k="${k}"] .gl`);
+  if (box) box.innerHTML = studioGames({ k, id, type });
+}
+
+/* Cycle */
+function setStatus(kind, text) { $('dot').className = 'dot ' + kind; $('st').textContent = text; }
+/* Direct mode: the page reads Roblox itself through the proxy */
+async function direct() {
+      if (Date.now() - lastDisc > CONFIG.discoverMs) {
+        try {
+          (await discover()).forEach(id => pool.add(id));
+          while (pool.size > CONFIG.maxPool) pool.delete(pool.values().next().value);
+          lastDisc = Date.now();
+        } catch {}
+      }
+      if (!pool.size) throw new Error('No games found');
+      const ids = [...pool], list = await hydrate(ids);
+      list.forEach(g => all.set(g.id, g));
+      snap(list);
+      await loadIcons(ids);
+}
+/* Server mode: a scheduled Netlify function keeps the pool, details, icons and 24h history */
+function useServer(H) {
+  Object.entries(H.games).forEach(([id, g]) => { all.set(+id, g); pool.add(+id); });
+  Object.assign(icons, H.icons || {});
+  store.snaps = {};
+  Object.entries(H.d || {}).forEach(([id, arr]) => {
+    store.snaps[id] = H.ts.map((t, i) => [t, arr[i]]).filter(q => q[1] != null);
+  });
+}
+async function cycle() {
+  clearTimeout(timer);
+  if (!document.hidden) {
+    try {
+      const H = await getJSON('/api/history').catch(() => null);
+      if (H && H.games) useServer(H); else await direct();
+      $('notice').hidden = true;
+      setStatus('ok', 'Updated ' + new Date().toLocaleTimeString());
+      render();
+    } catch (e) {
+      setStatus('bad', 'Update failed, retrying');
+      if (!all.size) {
+        $('notice').hidden = false;
+        $('notice').textContent = `Couldn't read Roblox's discovery lists through ${CONFIG.proxyDomain}. The proxy may be down, rate-limiting this connection, or Roblox may have changed the endpoint. This page retries every ${CONFIG.cycleMs / 60000} minutes.`;
+      }
+    }
+  }
+  timer = setTimeout(cycle, CONFIG.cycleMs);
+}
+
+/* Events */
+['win', 'sort', 'q', 'multi', 'min', 'max'].forEach(id => $(id).addEventListener(id === 'q' ? 'input' : 'change', render));
+document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.tabs button').forEach(x => x.setAttribute('aria-selected', x === b));
+  $('gamesView').hidden = b.dataset.v !== 'games';
+  $('studiosView').hidden = b.dataset.v !== 'studios';
+  $('sort').disabled = b.dataset.v !== 'games';
+});
+$('gl').addEventListener('click', e => {
+  const w = e.target.closest('.who');
+  if (w) { $('q').value = w.dataset.q; render(); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+});
+$('sl').addEventListener('toggle', e => {
+  const d = e.target;
+  if (!d.matches || !d.matches('details.st')) return;
+  const k = d.dataset.k;
+  if (d.open) { openSt.add(k); if (!loadedSt.has(k)) loadStudio(k); } else openSt.delete(k);
+}, true);
+const usd = v => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(v);
+async function scout(id) {
+  const g = all.get(id);
+  if (!g) return;
+  const x = metrics(g), c = g.creator || {}, R = CONFIG.robuxPerCcuPerDay, k = CONFIG.usdPerRobux, om = CONFIG.offerMonths;
+  $('repBody').innerHTML = `<h3>${esc(g.name)}</h3><p class="hint">Loading votes and game passes…</p>`;
+  $('rep').showModal();
+  const [v, p] = await Promise.all([
+    getJSON(api('games', `/v1/games/votes?universeIds=${id}`)).catch(() => null),
+    getJSON(api('apis', `/game-passes/v1/universes/${id}/game-passes?passView=Full&pageSize=100`)).catch(() => null)
+  ]);
+  const vt = v && v.data && v.data[0];
+  const like = vt && (vt.upVotes + vt.downVotes) ? Math.round(vt.upVotes / (vt.upVotes + vt.downVotes) * 100) + '%' : 'Unknown';
+  const list = p ? (p.gamePasses || p.data || []) : null;
+  const pr = list ? list.map(z => Number(z.price ?? z.priceInRobux)).filter(n => n > 0) : [];
+  const passTxt = !list ? 'Could not load' : !pr.length ? 'None for sale found' : `${pr.length} priced, ${cf.format(Math.min(...pr))} to ${cf.format(Math.max(...pr))} Robux`;
+  const lo = g.playing * R.low * 30 * k, hi = g.playing * R.high * 30 * k, mid = (lo + hi) / 2;
+  const link = c.type === 'Group' ? `https://www.roblox.com/communities/${c.id}` : `https://www.roblox.com/users/${c.id}/profile`;
+  const upd = ageLabel((Date.now() - Date.parse(g.updated)) / 864e5).replace(' old', ' ago');
+  $('repBody').innerHTML = `<h3>${esc(g.name)}</h3>
+    <p class="hint">${esc(c.name)}, ${ageLabel(x.age)}. <a href="${link}" target="_blank" rel="noopener">Find the owner on Roblox</a></p>
+    <div class="kv">
+      <span>Players now</span><b>${cf.format(g.playing)}</b>
+      ${x.pct == null ? '' : `<span>Growth vs earlier checks</span><b class="${x.pct >= 0 ? 'up' : 'dn'}">${x.pct >= 0 ? '+' : '−'}${cf.format(Math.round(Math.abs(x.pct)))}%</b>`}
+      <span>Visits</span><b>${cf.format(g.visits)}, ${cf.format(x.vpd)} per day</b>
+      <span>Favorites per 1K visits</span><b>${g.visits ? (g.favoritedCount / g.visits * 1000).toFixed(1) : '0'}</b>
+      <span>Like ratio</span><b>${like}</b>
+      <span>Game passes</span><b>${passTxt}</b>
+      <span>Last updated</span><b>${upd}</b>
+    </div>
+    <div class="offer"><strong>Rough numbers to anchor a deal</strong>
+      <div class="kv">
+        <span>Est. revenue per month</span><b>${usd(lo)} to ${usd(hi)}</b>
+        <span>Opening offer (${om.open} months, low estimate)</span><b>${usd(lo * om.open)}</b>
+        <span>Walk away above (${om.max} months, mid estimate)</span><b>${usd(mid * om.max)}</b>
+      </div>
+    </div>
+    <p class="hint">Roblox doesn't publish revenue, sales or retention. These figures scale today's player count by a rule of thumb, and the month multiples are placeholders you can change in CONFIG. Ask the owner for Creator Hub analytics before agreeing a price, and move ownership through a Roblox group or escrow so you never pay first.</p>`;
+}
+$('gl').addEventListener('click', e => { const b = e.target.closest('.sc'); if (b) scout(Number(b.dataset.id)); });
+$('repClose').onclick = () => $('rep').close();
+$('q').addEventListener('keydown', async e => {
+  const t = $('q').value.trim();
+  if (e.key !== 'Enter' || !t) return;
+  setStatus('ok', `Searching for "${t}"…`);
+  try {
+    const ids = [...collectIds(await search(t))].slice(0, 100);
+    ids.forEach(id => pool.add(id));
+    (await hydrate(ids)).forEach(g => all.set(g.id, g));
+    await loadIcons(ids);
+    render();
+    setStatus('ok', `Added results for "${t}"`);
+  } catch { setStatus('bad', 'Search failed'); }
+});
+document.addEventListener('visibilitychange', () => { if (!document.hidden) cycle(); });
+cycle();
+</script>
+</body>
+</html>
 
